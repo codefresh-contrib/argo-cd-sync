@@ -1,0 +1,6 @@
+query terminate($appName: String!) {
+    terminateCurrentAppOperation(appName: $appName) {
+        terminated
+        __typename
+    }
+}
