@@ -87,20 +87,28 @@ def terminate_query(ingress_host):
 
 
 def terminate_current_app_operation(ingress_host):
+    needsToTerminate=True
     try:
         terminate_query(ingress_host)
         print('Terminating current operation in app, ',
               'so the current sync action could be performed. Waiting 30 seconds.')
-        time.sleep(30)
     except Exception as e:
         # if the error message is because there's NO operatation to termiante
-        if str(e).find("current operation. Reason: Bad Request") < 0:
+        if str(e).find("Reason: Bad Request") > 0:
             print(f'Error: {e}')
             raise Exception(
                 f'Error trying to terminate the current operation of the app')
         else:
+            needsToTerminate=False
             print("The app doesn't have any current operation. ",
                   "No need to terminate operations. Continuing...")
+    if needsToTerminate is True:
+        print("Waiting for the current operation in the app to be successfully terminated.")
+        time.sleep(30)
+
+ 
+
+            
 
 
 def execute_argocd_sync(ingress_host):

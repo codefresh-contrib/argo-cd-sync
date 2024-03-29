@@ -5,4 +5,4 @@ RUN     pip3 install -r requirements.txt
 COPY    queries queries/
 COPY    argocd_sync.py run.py
 
-CMD     [ "python3", "run.py"]
+CMD     [ "python3", "-u", "run.py"]
