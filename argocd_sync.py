@@ -87,7 +87,6 @@ def terminate_query(ingress_host):
 
 
 def terminate_current_app_operation(ingress_host):
-    needsToTerminate=True
     try:
         terminate_query(ingress_host)
         print('Terminating current operation in app, ',
