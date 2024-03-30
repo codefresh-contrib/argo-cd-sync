@@ -87,6 +87,7 @@ def terminate_query(ingress_host):
 
 
 def terminate_current_app_operation(ingress_host):
+    needsToTerminate=True
     try:
         terminate_query(ingress_host)
         print('Terminating current operation in app, ',
@@ -104,10 +105,6 @@ def terminate_current_app_operation(ingress_host):
     if needsToTerminate is True:
         print("Waiting for the current operation in the app to be successfully terminated.")
         time.sleep(30)
-
- 
-
-            
 
 
 def execute_argocd_sync(ingress_host):
