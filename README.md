@@ -54,3 +54,18 @@ docker run --rm --env-file variables.env ${image_name}
 docker tag ${image_name} ${registry}/${image_name}:${image_tag}
 docker push ${registry}/${image_name}:${image_tag}
 ```
+
+When using ARM:
+```sh
+docker build \
+    --tag ${registry}/${image_name}:${image_tag} \
+    --platform linux/arm64/v8,linux/amd64 \
+    --builder container \
+    --push \
+    .
+```
+
+If you don't have a builder using the `docker-container` driver:
+```sh
+docker buildx create --name container --driver=docker-container
+```
