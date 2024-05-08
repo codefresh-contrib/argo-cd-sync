@@ -6,10 +6,18 @@ import time  # for the sleep function
 # From arguments
 RUNTIME = os.getenv('RUNTIME')
 APPLICATION = os.getenv('APPLICATION')
+SYNC_OPT_PRUNE = (os.getenv('SYNC_OPT_PRUNE', 'false').lower() == 'true')
+SYNC_OPT_FORCE = (os.getenv('SYNC_OPT_FORCE', 'false').lower() == 'true')
+SYNC_OPT_PRUNE_LAST = (os.getenv('SYNC_OPT_PRUNE_LAST', 'false').lower())
+SYNC_OPT_APPLY_OUT_OF_SYNC_ONLY = (os.getenv('SYNC_OPT_APPLY_OUT_OF_SYNC_ONLY', 'false').lower())
+SYNC_OPT_SERVER_SIDE_APPLY = (os.getenv('SYNC_OPT_SERVER_SIDE_APPLY', 'true').lower())
+
+
 # From execution context
 CF_URL = os.getenv('CF_URL', 'https://g.codefresh.io')
 CF_API_KEY = os.getenv('CF_API_KEY')
 CF_STEP_NAME = os.getenv('CF_STEP_NAME', 'STEP_NAME')
+
 
 ###############################################################################
 
@@ -120,7 +128,23 @@ def execute_argocd_sync(ingress_host):
     variables = {
         "applicationName": APPLICATION,
         "options": {
-            "prune": True
+            "name": APPLICATION,
+            "dryRun": False,
+            "prune": SYNC_OPT_PRUNE,
+            "strategy": {
+                "hook": {
+                    "force": SYNC_OPT_FORCE
+                }
+            },
+            "syncOptions": {
+                "items": [
+                    "PruneLast="+SYNC_OPT_PRUNE_LAST,
+                    "ApplyOutOfSyncOnly="+SYNC_OPT_APPLY_OUT_OF_SYNC_ONLY,
+                    "ServerSideApply="+SYNC_OPT_SERVER_SIDE_APPLY,
+                    "PrunePropagationPolicy=foreground"
+                ]
+            },
+            "resources": None
         }
     }
     print("Syncing app: ", variables)
