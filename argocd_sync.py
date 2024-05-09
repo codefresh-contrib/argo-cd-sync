@@ -6,6 +6,7 @@ import time  # for the sleep function
 # From arguments
 RUNTIME = os.getenv('RUNTIME')
 APPLICATION = os.getenv('APPLICATION')
+SYNC_REVISION = os.getenv('SYNC_REVISION', '')
 SYNC_OPT_PRUNE = (os.getenv('SYNC_OPT_PRUNE', 'false').lower() == 'true')
 SYNC_OPT_FORCE = (os.getenv('SYNC_OPT_FORCE', 'false').lower() == 'true')
 SYNC_OPT_PRUNE_LAST = (os.getenv('SYNC_OPT_PRUNE_LAST', 'false').lower())
@@ -147,9 +148,13 @@ def execute_argocd_sync(ingress_host):
             "resources": None
         }
     }
-    print("Syncing app: ", variables)
+
+    if SYNC_REVISION != '':
+        variables['options']['revision'] = SYNC_REVISION
+    
+    print("Syncing app:\n", variables)
     result = client.execute(query, variable_values=variables)
-    print(result)
+    print("Result:\n", result)
 
 
 def export_variable(var_name, var_value):
